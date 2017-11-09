@@ -1,5 +1,7 @@
 package lsg.weapons;
 
+import lsg.consumables.repair.RepairKit;
+
 import static java.lang.String.format;
 
 public class Weapon{
@@ -67,4 +69,7 @@ public class Weapon{
         this.stamCost = stamCost;
     }
 
+    public void repairWith(RepairKit kit){
+        durability += kit.use();
+    }
 }

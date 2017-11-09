@@ -7,8 +7,12 @@ import lsg.buffs.rings.RingOfDeath;
 import lsg.buffs.talismans.MoonStone;
 import lsg.characters.*;
 import lsg.characters.Character;
+import lsg.consumables.Consumable;
+import lsg.consumables.MenuBestOfV4;
+import lsg.consumables.food.Hamburger;
 import lsg.weapons.Claw;
 import lsg.weapons.Sword;
+import lsg.weapons.Weapon;
 
 import java.util.Scanner;
 
@@ -50,6 +54,7 @@ public class LearningSoulsGame {
     private void init(){
         hero = new Hero();
         hero.setWeapon(new Sword());
+        hero.setConsumable(new Hamburger());
 
         monster = new Monster();
         monster.setWeapon(new Claw());
@@ -77,7 +82,28 @@ public class LearningSoulsGame {
         fight1v1();
     }
 
+    private void createExhaustedHero(){
+        hero = new Hero();
+        hero.getHitWith(99);
+        hero.setWeapon(new Weapon("Grosse Arme",0,0,1000,100));
+        hero.attack();
+        hero.printStats();
+    }
+
+    private void aTable(){
+        MenuBestOfV4 manger = new MenuBestOfV4();
+        for(Consumable aff: manger){
+            hero.use(aff);
+            hero.printStats();
+            System.out.println("Apres utilisation : "+aff.toString());
+        }
+        System.out.println(hero.getWeapon());
+    }
+
     public static void main(String[] args){
-        new LearningSoulsGame().play_v3();
+        LearningSoulsGame game = new LearningSoulsGame();
+        game.createExhaustedHero();
+        game.aTable();
+
     }
 }

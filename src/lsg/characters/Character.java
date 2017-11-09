@@ -1,5 +1,9 @@
 package lsg.characters;
 
+import lsg.consumables.Consumable;
+import lsg.consumables.drinks.Drink;
+import lsg.consumables.food.Food;
+import lsg.consumables.repair.RepairKit;
 import lsg.helpers.Dice;
 import lsg.weapons.Weapon;
 
@@ -12,6 +16,7 @@ public abstract class Character {
     private int life, maxLife, stamina, maxStamina;
     private Dice dice;
     private Weapon weapon;
+    private Consumable consumable;
     public static final String LIFE_STAT_STRING = "life";
     public static final String STAM_STAT_STRING = "stamina";
     public static final String BUFF_STAT_STRING = "buff";
@@ -39,6 +44,10 @@ public abstract class Character {
         return weapon;
     }
 
+    public Consumable getConsumable() {
+        return consumable;
+    }
+
     protected void setName(String name) {
         this.name = name;
     }
@@ -61,6 +70,10 @@ public abstract class Character {
 
     public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
+    }
+
+    public void setConsumable(Consumable consumable) {
+        this.consumable = consumable;
     }
 
     public Character(){}
@@ -136,6 +149,45 @@ public abstract class Character {
         pvRetire = ((pvRetire > life)? life :pvRetire);
         life -= pvRetire;
         return (pvRetire);
+    }
+
+    private void drink(Drink drink){
+        System.out.println(name + " drinks " + drink.toString());
+        stamina += drink.use();
+        if (stamina > maxStamina) {
+            stamina = maxStamina;
+        }
+    }
+
+    private void eat(Food food){
+        System.out.println(name + " eats " + food.toString());
+        stamina += food.use();
+        if (stamina > maxStamina) {
+            stamina = maxStamina;
+        }
+    }
+
+    public void use(Consumable consumable){
+        if(consumable instanceof Food){
+            this.eat((Food) consumable);
+        }
+        else{
+            if(consumable instanceof Drink) {
+                this.drink((Drink) consumable);
+            }
+            else {
+                this.repairWeaponWith((RepairKit) consumable);
+            }
+        }
+    }
+
+    private void repairWeaponWith(RepairKit kit){
+        System.out.println(name + " repairs " + weapon.toString() + " with " + kit.toString());
+        weapon.repairWith(kit);
+    }
+
+    public void consume(){
+        this.use(consumable);
     }
 
     protected abstract float computeProtection();
