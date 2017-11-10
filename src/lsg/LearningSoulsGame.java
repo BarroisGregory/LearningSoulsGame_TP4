@@ -21,9 +21,12 @@ public class LearningSoulsGame {
     private Scanner scanner = new Scanner(System.in);
     private Hero hero;
     private  Monster monster;
+    public static final String BULLET_POINT = "\u2219";
 
     private void refresh(){
         hero.printStats();
+        System.out.println(BULLET_POINT +" "+ hero.getWeapon());
+        System.out.println(BULLET_POINT +" "+ hero.getConsumable());
         monster.printStats();
     }
 
@@ -35,12 +38,27 @@ public class LearningSoulsGame {
         refresh();
         while(hero.isAlive() && monster.isAlive()){
             System.out.println("Hit enter key for next move >");
-            scanner.nextLine();
+            int hitValue, damage, scan;
 
-            int hitValue = attaquant.attack();
-            int damage = defenseur.getHitWith(hitValue);
-
-            System.out.println(attaquant.getName() + " attacks " + defenseur.getName() + " with " + attaquant.getWeapon().getName() + "(ATTACK:" + hitValue + "| DMG:" + damage + ")");
+            if(attaquant == hero){
+                scan = scanner.nextInt();
+                while (scan != 1 && scan != 2){
+                    scan = scanner.nextInt();
+                }
+                if(scan == 1) {
+                    hitValue = attaquant.attack();
+                    damage = defenseur.getHitWith(hitValue);
+                    System.out.println(attaquant.getName() + " attacks " + defenseur.getName() + " with " + attaquant.getWeapon().getName() + "(ATTACK:" + hitValue + "| DMG:" + damage + ")");
+                }
+                else{
+                    attaquant.consume();
+                }
+            }
+            else {
+                hitValue = attaquant.attack();
+                damage = defenseur.getHitWith(hitValue);
+                System.out.println(attaquant.getName() + " attacks " + defenseur.getName() + " with " + attaquant.getWeapon().getName() + "(ATTACK:" + hitValue + "| DMG:" + damage + ")");
+            }
 
             temp = attaquant;
             attaquant = defenseur;
@@ -100,8 +118,15 @@ public class LearningSoulsGame {
         System.out.println(hero.getWeapon());
     }
 
+    public void title(){
+        System.out.println("***********************************************");
+        System.out.println("*------------ Learning Souls Game ------------*");
+        System.out.println("***********************************************");
+    }
+
     public static void main(String[] args){
         LearningSoulsGame game = new LearningSoulsGame();
+        game.title();
         game.createExhaustedHero();
         game.aTable();
 
